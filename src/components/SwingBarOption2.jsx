@@ -7,6 +7,7 @@ const SwingBarOption2 = () => {
   const gaugeRef = useRef(null)
 
   // SHAVE estimates from Split Ticket
+  // Source: https://split-ticket.org/house-generic-ballot-estimates-2008-2022-shave/
   const midtermResults = [
     { year: 2010, margin: -5.1 }, // R+5.1
     { year: 2014, margin: -5.1 }, // R+5.1
