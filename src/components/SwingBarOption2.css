@@ -1,0 +1,155 @@
+.swing-bar-option2 {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.swing-bar-option2 h3 {
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.gauge-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Results Sections */
+.results-section {
+  margin: 1.5rem 0;
+}
+
+.section-label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.results-bands {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.result-band {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s, opacity 0.2s;
+  cursor: pointer;
+}
+
+.result-band:hover {
+  transform: scale(1.05);
+  opacity: 1 !important;
+}
+
+.band-year {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.band-value {
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+/* Gauge Wrapper */
+.gauge-wrapper {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.gauge-value {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: -1rem;
+  padding: 1rem;
+}
+
+/* Control Section */
+.control-section {
+  margin: 2rem 0;
+  padding: 0 2rem;
+}
+
+.control-slider {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(to right,
+    #E24A4A 0%,
+    #FFB3B3 25%,
+    #FFFFFF 50%,
+    #B3D4FF 75%,
+    #4A90E2 100%
+  );
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 30px;
+  background: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.control-slider::-moz-range-thumb {
+  width: 20px;
+  height: 30px;
+  background: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+  .results-bands {
+    gap: 0.3rem;
+  }
+
+  .result-band {
+    min-width: 60px;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .band-year {
+    font-size: 0.7rem;
+  }
+
+  .band-value {
+    font-size: 0.75rem;
+  }
+
+  .gauge-value {
+    font-size: 1.5rem;
+  }
+}
