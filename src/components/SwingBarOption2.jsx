@@ -227,9 +227,51 @@ const SwingBarOption2 = () => {
               D+10
             </text>
 
-            {/* Historical markers on arc */}
-            {[...midtermResults, ...housePresidentialResults, ...presResults].map((result, idx) => {
-              // Calculate angle for text positioning
+            {/* Presidential election markers (white, inside arc) */}
+            {presResults.map((result, idx) => {
+              const normalized = (result.margin + 10) / 20
+              const angleDegrees = 180 - (normalized * 180)
+              const angleRadians = (angleDegrees * Math.PI) / 180
+
+              // Hash mark extends inward from arc
+              const outerRadius = 120
+              const innerRadius = 105
+              const textRadius = 95
+
+              const innerX = 150 + innerRadius * Math.cos(angleRadians)
+              const innerY = 150 - innerRadius * Math.sin(angleRadians)
+              const outerX = 150 + outerRadius * Math.cos(angleRadians)
+              const outerY = 150 - outerRadius * Math.sin(angleRadians)
+              const textX = 150 + textRadius * Math.cos(angleRadians)
+              const textY = 150 - textRadius * Math.sin(angleRadians)
+
+              return (
+                <g key={`pres-${idx}`} style={{ pointerEvents: 'none' }}>
+                  <line
+                    x1={innerX}
+                    y1={innerY}
+                    x2={outerX}
+                    y2={outerY}
+                    stroke="white"
+                    strokeWidth="2.5"
+                  />
+                  <text
+                    x={textX}
+                    y={textY}
+                    fontSize="9"
+                    fontWeight="600"
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    '{String(result.year).slice(-2)}
+                  </text>
+                </g>
+              )
+            })}
+
+            {/* Midterm and House presidential year markers (colored, outside arc) */}
+            {[...midtermResults, ...housePresidentialResults].map((result, idx) => {
               const normalized = (result.margin + 10) / 20
               const angleDegrees = 180 - (normalized * 180)
               const angleRadians = (angleDegrees * Math.PI) / 180
@@ -246,22 +288,24 @@ const SwingBarOption2 = () => {
               const textX = 150 + textRadius * Math.cos(angleRadians)
               const textY = 150 - textRadius * Math.sin(angleRadians)
 
+              const color = getColor(result.margin)
+
               return (
-                <g key={`marker-${idx}`} style={{ pointerEvents: 'none' }}>
+                <g key={`house-${idx}`} style={{ pointerEvents: 'none' }}>
                   <line
                     x1={innerX}
                     y1={innerY}
                     x2={outerX}
                     y2={outerY}
-                    stroke="#666"
-                    strokeWidth="2"
+                    stroke={color}
+                    strokeWidth="2.5"
                   />
                   <text
                     x={textX}
                     y={textY}
                     fontSize="9"
                     fontWeight="600"
-                    fill="#666"
+                    fill={color}
                     textAnchor="middle"
                     dominantBaseline="middle"
                   >
