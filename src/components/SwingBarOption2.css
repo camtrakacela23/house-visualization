@@ -17,22 +17,70 @@
 
 /* Results Sections */
 .results-section {
-  margin: 1.5rem 0;
+  margin: 1rem 0; /* slightly tighter spacing between sections */
 }
 
 .section-label {
   font-weight: bold;
+  font-size: 0.8rem; /* slightly smaller label */
+  color: #666;
+  margin-bottom: 0.5rem; /* reduce vertical gap */
+  text-align: center;
+}
+
+/* Preselection collapsible panel */
+.preselection-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 0.6rem; /* tighten space below header */
+}
+
+.preselection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-weight: 700;
+  color: #333;
+}
+
+.preselection-title {
+  font-size: 0.95rem;
+}
+
+.preselection-chevron {
+  transition: transform 0.2s ease;
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 0.75rem;
-  text-align: center;
+}
+
+.preselection-chevron.open {
+  transform: rotate(180deg);
+}
+
+.preselection-content {
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+  max-height: 2000px;
+  opacity: 1;
+  padding-top: 0.5rem;
+}
+
+.preselection-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
 }
 
 .results-bands {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem; /* a bit less gap between buttons */
 }
 
 .result-band {
@@ -67,12 +115,16 @@
 /* Gauge Wrapper */
 .gauge-wrapper {
   position: relative;
-  margin: 2rem 0;
+  margin: 1.5rem 0; /* slightly less whitespace above/below gauge */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .gauge-svg {
   width: 100%;
-  max-width: 400px;
+  max-width: 520px; /* larger for emphasis */
   height: auto;
   margin: 0 auto;
   display: block;
@@ -80,19 +132,28 @@
 
 .gauge-value {
   text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.6rem; /* bigger and more prominent */
+  font-weight: 800;
   color: #333;
-  margin-top: -1rem;
-  padding: 0.5rem;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.12);
 }
 
 .gauge-instruction {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #666;
   font-style: italic;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.gauge-with-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem; /* tighter so gauge stays central */
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -100,20 +161,25 @@
     gap: 0.3rem;
   }
 
+  /* Shrink previous-election buttons ~25% to create more space on mobile */
   .result-band {
-    min-width: 60px;
-    padding: 0.4rem 0.8rem;
+    min-width: 52px; /* ~25% smaller than original 70px */
+    padding: 0.3rem 0.6rem;
   }
 
   .band-year {
-    font-size: 0.7rem;
+    font-size: 0.55rem;
   }
 
   .band-value {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
+  }
+
+  .gauge-svg {
+    max-width: 340px;
   }
 
   .gauge-value {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 }
