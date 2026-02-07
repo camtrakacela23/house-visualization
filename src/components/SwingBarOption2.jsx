@@ -91,16 +91,26 @@ const SwingBarOption2 = () => {
   }
 
   const getArcPosition = (margin) => {
-    // Position along the semicircle (180 degrees for left, 0 degrees for right)
-    // R+10 is at left (-10 margin), D+10 is at right (+10 margin)
-    const angle = 180 - ((margin + 10) / 20) * 180 // Flip the angle
-    const radians = angle * (Math.PI / 180)
-    const radius = 120
+    // Map margin to angle on semicircle
+    // margin -10 (R+10) should be at angle 180° (left)
+    // margin 0 (EVEN) should be at angle 90° (top)
+    // margin +10 (D+10) should be at angle 0° (right)
+
+    // Normalize margin from [-10, 10] to [0, 1]
+    const normalized = (margin + 10) / 20
+
+    // Convert to angle (180° on left, 0° on right)
+    const angleDegrees = 180 - (normalized * 180)
+    const angleRadians = (angleDegrees * Math.PI) / 180
+
+    // Calculate position on arc
     const centerX = 150
     const centerY = 150
+    const radius = 120
+
     return {
-      x: centerX + radius * Math.cos(radians),
-      y: centerY - radius * Math.sin(radians), // Negative because SVG y increases downward
+      x: centerX + radius * Math.cos(angleRadians),
+      y: centerY - radius * Math.sin(angleRadians)
     }
   }
 
@@ -111,7 +121,7 @@ const SwingBarOption2 = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <h3>Option 2: Gauge/Dial Interface</h3>
+      <h3>Generic Ballot</h3>
 
       <div className="gauge-container">
         {/* Midterm House Results */}
