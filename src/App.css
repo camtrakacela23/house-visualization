@@ -1,0 +1,16 @@
+.App {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.App h1 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.App p {
+  margin-bottom: 2rem;
+  color: #666;
+}
