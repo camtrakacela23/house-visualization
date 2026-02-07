@@ -1,18 +1,24 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './SwingBarOption2.css'
 
 const SwingBarOption2 = () => {
   const [currentValue, setCurrentValue] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const gaugeRef = useRef(null)
 
-  const houseResults = [
-    { year: 2008, margin: 10.6 },
+  // Separate midterm and presidential year House elections
+  const midtermResults = [
     { year: 2010, margin: -6.8 },
-    { year: 2012, margin: 1.2 },
     { year: 2014, margin: -5.7 },
-    { year: 2016, margin: 1.1 },
     { year: 2018, margin: 8.6 },
-    { year: 2020, margin: 3.1 },
     { year: 2022, margin: -2.8 },
+  ]
+
+  const housePresidentialResults = [
+    { year: 2008, margin: 10.6 },
+    { year: 2012, margin: 1.2 },
+    { year: 2016, margin: 1.1 },
+    { year: 2020, margin: 3.1 },
     { year: 2024, margin: 0.5 },
   ]
 
@@ -24,8 +30,46 @@ const SwingBarOption2 = () => {
     { year: 2024, margin: -1.5 },
   ]
 
-  const handleSliderChange = (e) => {
-    setCurrentValue(parseFloat(e.target.value))
+  const calculateMarginFromMouse = (e) => {
+    if (!gaugeRef.current) return 0
+
+    const rect = gaugeRef.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height * 0.75 // Adjust for semicircle
+
+    const mouseX = e.clientX - centerX
+    const mouseY = e.clientY - centerY
+
+    // Calculate angle in degrees
+    let angle = Math.atan2(mouseY, mouseX) * (180 / Math.PI)
+
+    // Convert angle to margin value
+    // -90 degrees = R+10, +90 degrees = D+10
+    let margin = (angle / 90) * 10
+
+    // Clamp between -10 and 10
+    margin = Math.max(-10, Math.min(10, margin))
+
+    // Round to nearest 0.5
+    margin = Math.round(margin * 2) / 2
+
+    return margin
+  }
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true)
+    const margin = calculateMarginFromMouse(e)
+    setCurrentValue(margin)
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return
+    const margin = calculateMarginFromMouse(e)
+    setCurrentValue(margin)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
   }
 
   const getNeedleRotation = (margin) => {
@@ -57,22 +101,49 @@ const SwingBarOption2 = () => {
   }
 
   return (
-    <div className="swing-bar-option2">
+    <div
+      className="swing-bar-option2"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       <h3>Option 2: Gauge/Dial Interface</h3>
 
       <div className="gauge-container">
-        {/* House Results Section */}
+        {/* Midterm House Results */}
         <div className="results-section house-section">
-          <div className="section-label">HOUSE ELECTIONS</div>
+          <div className="section-label">HOUSE - MIDTERM ELECTIONS</div>
           <div className="results-bands">
-            {houseResults.map((result) => (
+            {midtermResults.map((result) => (
               <div
-                key={`house-${result.year}`}
+                key={`midterm-${result.year}`}
                 className="result-band"
                 style={{
                   backgroundColor: getColor(result.margin),
                   opacity: 0.7,
                 }}
+                onClick={() => setCurrentValue(result.margin)}
+              >
+                <span className="band-year">{result.year}</span>
+                <span className="band-value">{formatMargin(result.margin)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Presidential Year House Results */}
+        <div className="results-section house-section">
+          <div className="section-label">HOUSE - PRESIDENTIAL YEARS</div>
+          <div className="results-bands">
+            {housePresidentialResults.map((result) => (
+              <div
+                key={`house-pres-${result.year}`}
+                className="result-band"
+                style={{
+                  backgroundColor: getColor(result.margin),
+                  opacity: 0.7,
+                }}
+                onClick={() => setCurrentValue(result.margin)}
               >
                 <span className="band-year">{result.year}</span>
                 <span className="band-value">{formatMargin(result.margin)}</span>
@@ -83,7 +154,13 @@ const SwingBarOption2 = () => {
 
         {/* Gauge SVG */}
         <div className="gauge-wrapper">
-          <svg viewBox="0 0 300 200" className="gauge-svg">
+          <svg
+            viewBox="0 0 300 200"
+            className="gauge-svg"
+            ref={gaugeRef}
+            onMouseDown={handleMouseDown}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+          >
             {/* Background arc */}
             <defs>
               <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -102,12 +179,13 @@ const SwingBarOption2 = () => {
               strokeLinecap="round"
             />
 
-            {/* Tick marks */}
-            {[-10, -5, 0, 5, 10].map((tick) => {
+            {/* Tick marks every 2.5% */}
+            {[-10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10].map((tick) => {
               const angle = ((tick + 10) / 20) * 180 - 90
               const radians = angle * (Math.PI / 180)
               const innerR = 105
-              const outerR = 125
+              const outerR = tick % 5 === 0 ? 125 : 120 // Longer marks for major ticks
+              const strokeWidth = tick % 5 === 0 ? 2 : 1.5
               return (
                 <line
                   key={tick}
@@ -116,7 +194,7 @@ const SwingBarOption2 = () => {
                   x2={150 + outerR * Math.cos(radians)}
                   y2={150 + outerR * Math.sin(radians)}
                   stroke="#333"
-                  strokeWidth="2"
+                  strokeWidth={strokeWidth}
                 />
               )
             })}
@@ -133,7 +211,7 @@ const SwingBarOption2 = () => {
             </text>
 
             {/* Historical markers on arc */}
-            {[...houseResults, ...presResults].map((result, idx) => {
+            {[...midtermResults, ...housePresidentialResults, ...presResults].map((result, idx) => {
               const pos = getArcPosition(result.margin)
               return (
                 <circle
@@ -143,6 +221,7 @@ const SwingBarOption2 = () => {
                   r="4"
                   fill={getColor(result.margin)}
                   opacity="0.6"
+                  style={{ pointerEvents: 'none' }}
                 />
               )
             })}
@@ -163,19 +242,7 @@ const SwingBarOption2 = () => {
           </svg>
 
           <div className="gauge-value">{formatMargin(currentValue)}</div>
-        </div>
-
-        {/* Control Slider */}
-        <div className="control-section">
-          <input
-            type="range"
-            min="-10"
-            max="10"
-            step="0.5"
-            value={currentValue}
-            onChange={handleSliderChange}
-            className="control-slider"
-          />
+          <div className="gauge-instruction">Click and drag the gauge to adjust</div>
         </div>
 
         {/* Presidential Results Section */}
@@ -190,6 +257,7 @@ const SwingBarOption2 = () => {
                   backgroundColor: getColor(result.margin),
                   opacity: 0.7,
                 }}
+                onClick={() => setCurrentValue(result.margin)}
               >
                 <span className="band-year">{result.year}</span>
                 <span className="band-value">{formatMargin(result.margin)}</span>
