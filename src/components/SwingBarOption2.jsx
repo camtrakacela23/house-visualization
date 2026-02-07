@@ -229,17 +229,45 @@ const SwingBarOption2 = () => {
 
             {/* Historical markers on arc */}
             {[...midtermResults, ...housePresidentialResults, ...presResults].map((result, idx) => {
-              const pos = getArcPosition(result.margin)
+              // Calculate angle for text positioning
+              const normalized = (result.margin + 10) / 20
+              const angleDegrees = 180 - (normalized * 180)
+              const angleRadians = (angleDegrees * Math.PI) / 180
+
+              // Hash mark extends outward from arc
+              const innerRadius = 120
+              const outerRadius = 135
+              const textRadius = 145
+
+              const innerX = 150 + innerRadius * Math.cos(angleRadians)
+              const innerY = 150 - innerRadius * Math.sin(angleRadians)
+              const outerX = 150 + outerRadius * Math.cos(angleRadians)
+              const outerY = 150 - outerRadius * Math.sin(angleRadians)
+              const textX = 150 + textRadius * Math.cos(angleRadians)
+              const textY = 150 - textRadius * Math.sin(angleRadians)
+
               return (
-                <circle
-                  key={`marker-${idx}`}
-                  cx={pos.x}
-                  cy={pos.y}
-                  r="4"
-                  fill={getColor(result.margin)}
-                  opacity="0.6"
-                  style={{ pointerEvents: 'none' }}
-                />
+                <g key={`marker-${idx}`} style={{ pointerEvents: 'none' }}>
+                  <line
+                    x1={innerX}
+                    y1={innerY}
+                    x2={outerX}
+                    y2={outerY}
+                    stroke="#666"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={textX}
+                    y={textY}
+                    fontSize="9"
+                    fontWeight="600"
+                    fill="#666"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    '{String(result.year).slice(-2)}
+                  </text>
+                </g>
               )
             })}
 
