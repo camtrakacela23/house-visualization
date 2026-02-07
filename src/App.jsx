@@ -2,7 +2,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import SwingBarOption1 from './components/SwingBarOption1'
 import SwingBarOption2 from './components/SwingBarOption2'
 
 // Fix for default marker icons in bundled apps
@@ -17,10 +16,9 @@ function App() {
   return (
     <div className="App">
       <h1>Census & Election Data Visualization</h1>
-      <p>Generic Ballot Swing Bar - Design Comparison</p>
+      <p>Generic Ballot Swing Bar</p>
 
-      {/* Swing Bar Visualizations */}
-      <SwingBarOption1 />
+      {/* Swing Bar Visualization */}
       <SwingBarOption2 />
 
       {/* Map Section */}
