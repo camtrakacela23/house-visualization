@@ -6,20 +6,20 @@ const SwingBarOption2 = () => {
   const [isDragging, setIsDragging] = useState(false)
   const gaugeRef = useRef(null)
 
-  // Separate midterm and presidential year House elections
+  // SHAVE estimates from Split Ticket
   const midtermResults = [
-    { year: 2010, margin: -6.8 },
-    { year: 2014, margin: -5.7 },
-    { year: 2018, margin: 8.6 },
-    { year: 2022, margin: -2.8 },
+    { year: 2010, margin: -5.1 }, // R+5.1
+    { year: 2014, margin: -5.1 }, // R+5.1
+    { year: 2018, margin: 7.3 },  // D+7.3
+    { year: 2022, margin: -1.6 }, // R+1.6
   ]
 
   const housePresidentialResults = [
-    { year: 2008, margin: 10.6 },
-    { year: 2012, margin: 1.2 },
-    { year: 2016, margin: 1.1 },
-    { year: 2020, margin: 3.1 },
-    { year: 2024, margin: 0.5 },
+    { year: 2008, margin: 8.7 },  // D+8.7
+    { year: 2012, margin: 2.4 },  // D+2.4
+    { year: 2016, margin: -1.6 }, // R+1.6
+    { year: 2020, margin: 2.1 },  // D+2.1
+    { year: 2024, margin: -2.1 }, // R+2.1
   ]
 
   const presResults = [
@@ -90,13 +90,16 @@ const SwingBarOption2 = () => {
   }
 
   const getArcPosition = (margin) => {
-    // Position along the semicircle (0 to 180 degrees)
-    const angle = ((margin + 10) / 20) * 180
-    const radians = (angle - 90) * (Math.PI / 180)
+    // Position along the semicircle (180 degrees for left, 0 degrees for right)
+    // R+10 is at left (-10 margin), D+10 is at right (+10 margin)
+    const angle = 180 - ((margin + 10) / 20) * 180 // Flip the angle
+    const radians = angle * (Math.PI / 180)
     const radius = 120
+    const centerX = 150
+    const centerY = 150
     return {
-      x: 150 + radius * Math.cos(radians),
-      y: 150 + radius * Math.sin(radians),
+      x: centerX + radius * Math.cos(radians),
+      y: centerY - radius * Math.sin(radians), // Negative because SVG y increases downward
     }
   }
 
