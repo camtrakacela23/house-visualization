@@ -195,8 +195,11 @@ const SwingBarOption2 = () => {
 
             {/* Tick marks every 2.5% */}
             {[-10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10].map((tick) => {
-              const angle = ((tick + 10) / 20) * 180 - 90
-              const radians = angle * (Math.PI / 180)
+              // Use same angle calculation as dots
+              const normalized = (tick + 10) / 20
+              const angleDegrees = 180 - (normalized * 180)
+              const radians = (angleDegrees * Math.PI) / 180
+
               const innerR = 105
               const outerR = tick % 5 === 0 ? 125 : 120 // Longer marks for major ticks
               const strokeWidth = tick % 5 === 0 ? 2 : 1.5
@@ -204,9 +207,9 @@ const SwingBarOption2 = () => {
                 <line
                   key={tick}
                   x1={150 + innerR * Math.cos(radians)}
-                  y1={150 + innerR * Math.sin(radians)}
+                  y1={150 - innerR * Math.sin(radians)}
                   x2={150 + outerR * Math.cos(radians)}
-                  y2={150 + outerR * Math.sin(radians)}
+                  y2={150 - outerR * Math.sin(radians)}
                   stroke="#333"
                   strokeWidth={strokeWidth}
                 />
