@@ -1,16 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
 .App {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Background handled by blackboard theme */
 }
 
-.App h1 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.App p {
-  margin-bottom: 2rem;
-  color: #666;
+.app-main {
+  flex: 1;
 }
